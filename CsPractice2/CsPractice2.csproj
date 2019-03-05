@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{035231B0-07E4-4DC4-8DB0-A9003A49EC78}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>CsPractice2</RootNamespace>
+    <RootNamespace>NaUKMA.CS.Practice02</RootNamespace>
     <AssemblyName>CsPractice2</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="RelayCommand.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -69,6 +70,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Person.cs" />
+    <Compile Include="PersonVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
