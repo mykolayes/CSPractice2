@@ -55,6 +55,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AsyncCommand.cs" />
+    <Compile Include="AsyncCommandBase.cs" />
+    <Compile Include="BirthDateException.cs" />
+    <Compile Include="EmailException.cs" />
+    <Compile Include="IAsyncCommand.cs" />
+    <Compile Include="NotifyTaskCompletion.cs" />
     <Compile Include="RelayCommand.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

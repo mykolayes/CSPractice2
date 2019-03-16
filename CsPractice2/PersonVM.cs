@@ -225,6 +225,13 @@ namespace NaUKMA.CS.Practice02
 
         #endregion
 
+        ////on_clicks
+
+        //private async void ProceedButton_OnClick(object sender, RoutedEventArgs e)
+        //{
+        //    await CheckAndProceed();
+        //}
+
         //commands
 
         private ICommand _checkAndProceedCommand;
@@ -252,8 +259,11 @@ namespace NaUKMA.CS.Practice02
         private async Task CheckAndProceed()
         {
             //check
-            int ageCheck = DateTime.Compare(CurrentBirthDate, DateTime.Today);
-            if (ageCheck > 0)
+            try
+            {
+                await CheckAge();
+            }
+            catch (BirthDateException ex)
             {
                 MessageBox.Show("This program works only for people born on 02.19.1901 or later, up to today.");
                 return;
@@ -261,9 +271,9 @@ namespace NaUKMA.CS.Practice02
 
             try
             {
-                System.Net.Mail.MailAddress mailAddress = new System.Net.Mail.MailAddress(CurrentEmail);
+                await CheckEmail();
             }
-            catch
+            catch (EmailException ex)
             {
                 MessageBox.Show("Please, enter existing email address.");
                 return;
@@ -285,11 +295,34 @@ namespace NaUKMA.CS.Practice02
             ResultName = tmp.Name;
             ResultSurname = tmp.Surname;
             ResultEmail = tmp.Email;
-            ResultBirthDate = tmp.BirthDate.ToLongDateString();
+            ResultBirthDate = tmp.BirthDate.Value.ToLongDateString();
             ResultIsAdult = tmp.IsAdult.ToString();
             ResultSunSign = tmp.SunSign;
             ResultChineseSign = tmp.ChineseSign;
             ResultIsBirthday = tmp.IsBirthday.ToString();
+        }
+
+        private async Task CheckAge()
+        {
+            int ageCheck = DateTime.Compare(CurrentBirthDate, DateTime.Today);
+            if (ageCheck > 0 || ageCheck.Equals(-1))
+            {
+                //throw new BirthDateException("Person must be already born.");
+                throw new BirthDateException();
+            }
+        }
+
+        private async Task CheckEmail()
+        {    
+            try
+            {
+                System.Net.Mail.MailAddress mailAddress = new System.Net.Mail.MailAddress(CurrentEmail);
+            }
+            catch
+            {
+                //throw new EmailException("Please, enter existing email address.");
+                throw new EmailException();
+            }
         }
 
         //event handling

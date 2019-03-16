@@ -7,35 +7,36 @@ namespace NaUKMA.CS.Practice02
         public String Name { get; private set; }
         public String Surname { get; private set; }
         public String Email { get; private set; }
-        public DateTime BirthDate { get; private set; }
+        public DateTime? BirthDate { get; private set; }
 
-        public Person(string name, string surname, string email, DateTime birthDate)
+        public Person(string name, string surname, string email, Object birthDate)
         {
             Name = name;
             Surname = surname;
             Email = email;
-            BirthDate = birthDate;
+            if (birthDate is DateTime)
+            {
+                BirthDate = (DateTime?)birthDate;
+            }
+            else
+            {
+                BirthDate = null;
+            }
         }
 
-        public Person(string name, string surname, string email)
+        public Person(string name, string surname, string email):this(name,surname,email, null)
         {
-            Name = name;
-            Surname = surname;
-            Email = email;
         }
 
-        public Person(string name, string surname, DateTime birthDate)
+        public Person(string name, string surname, DateTime birthDate):this(name, surname, "", birthDate)
         {
-            Name = name;
-            Surname = surname;
-            BirthDate = birthDate;
         }
 
         public bool IsAdult
         {
             get
             {
-                int age = DateTime.Now.Year - BirthDate.Year;
+                int age = DateTime.Now.Year - BirthDate.Value.Year;
                 if (BirthDate > DateTime.Now.AddYears(-age))
                     age--;
 
@@ -47,8 +48,8 @@ namespace NaUKMA.CS.Practice02
         {
             get
             {
-                int month = BirthDate.Month;
-                int day = BirthDate.Day;
+                int month = BirthDate.Value.Month;
+                int day = BirthDate.Value.Day;
                 switch (month)
                 {
                     case 1:
@@ -122,7 +123,7 @@ namespace NaUKMA.CS.Practice02
             get
             {
                 var c = new System.Globalization.ChineseLunisolarCalendar();
-                var y = c.GetSexagenaryYear(BirthDate);
+                var y = c.GetSexagenaryYear(BirthDate.Value);
                 var s = c.GetCelestialStem(y) - 1;
                 return
                     ",Rat,Ox,Tiger,Rabbit,Dragon,Snake,Horse,Goat,Monkey,Rooster,Dog,Pig".Split(',')[
@@ -137,7 +138,7 @@ namespace NaUKMA.CS.Practice02
         {
             get
             {
-                return DateTime.Now.Month.Equals(BirthDate.Month) && DateTime.Now.Day.Equals(BirthDate.Day);
+                return DateTime.Now.Month.Equals(BirthDate.Value.Month) && DateTime.Now.Day.Equals(BirthDate.Value.Day);
             }
         }
     }
