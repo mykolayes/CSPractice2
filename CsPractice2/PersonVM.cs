@@ -28,7 +28,7 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
-        String _currentName;
+        private String _currentName;
 
         #endregion
 
@@ -44,7 +44,7 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
-        String _currentSurname;
+        private String _currentSurname;
 
         #endregion
 
@@ -60,7 +60,7 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
-        String _currentEmail;
+        private String _currentEmail;
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
-        DateTime _currentBirthDate;
+        private DateTime _currentBirthDate;
 
         #endregion
 

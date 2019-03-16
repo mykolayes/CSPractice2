@@ -2,18 +2,18 @@
 
 namespace NaUKMA.CS.Practice02
 {
-    public class EmailException : Exception
+    internal class EmailException : Exception
     {
-        public EmailException()
+        internal EmailException()
         {
         }
 
-        public EmailException(string message)
+        internal EmailException(string message)
             : base(message)
         {
         }
 
-        public EmailException(string message, Exception inner)
+        internal EmailException(string message, Exception inner)
             : base(message, inner)
         {
         }

@@ -2,18 +2,18 @@
 
 namespace NaUKMA.CS.Practice02
 {
-    public class BirthDateException : Exception
+    internal class BirthDateException : Exception
     {
-        public BirthDateException()
+        internal BirthDateException()
         {
         }
 
-        public BirthDateException(string message)
+        internal BirthDateException(string message)
             : base(message)
         {
         }
 
-        public BirthDateException(string message, Exception inner)
+        internal BirthDateException(string message, Exception inner)
             : base(message, inner)
         {
         }

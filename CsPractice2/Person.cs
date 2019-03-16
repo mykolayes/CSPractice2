@@ -4,12 +4,12 @@ namespace NaUKMA.CS.Practice02
 {
     internal class Person
     {
-        public String Name { get; private set; }
-        public String Surname { get; private set; }
-        public String Email { get; private set; }
-        public DateTime? BirthDate { get; private set; }
+        internal String Name { get; private set; }
+        internal String Surname { get; private set; }
+        internal String Email { get; private set; }
+        internal DateTime? BirthDate { get; private set; }
 
-        public Person(string name, string surname, string email, Object birthDate)
+        internal Person(string name, string surname, string email, Object birthDate)
         {
             Name = name;
             Surname = surname;
@@ -24,15 +24,15 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
-        public Person(string name, string surname, string email):this(name,surname,email, null)
+        internal Person(string name, string surname, string email):this(name,surname,email, null)
         {
         }
 
-        public Person(string name, string surname, DateTime birthDate):this(name, surname, "", birthDate)
+        internal Person(string name, string surname, DateTime birthDate):this(name, surname, "", birthDate)
         {
         }
 
-        public bool IsAdult
+        internal bool IsAdult
         {
             get
             {
@@ -44,7 +44,7 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
-        public string SunSign
+        internal string SunSign
         {
             get
             {
@@ -118,7 +118,7 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
-        public string ChineseSign
+        internal string ChineseSign
         {
             get
             {
@@ -134,7 +134,7 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
-        public bool IsBirthday
+        internal bool IsBirthday
         {
             get
             {
