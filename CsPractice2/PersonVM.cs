@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -255,16 +256,12 @@ namespace NaUKMA.CS.Practice02
             try
             {
                 await CheckAge();
+                await CheckEmail();
             }
             catch (BirthDateException ex)
             {
                 MessageBox.Show("This program works only for people born on 02.19.1901 or later, up to today.");
                 return;
-            }
-
-            try
-            {
-                await CheckEmail();
             }
             catch (EmailException ex)
             {
@@ -297,8 +294,10 @@ namespace NaUKMA.CS.Practice02
 
         private async Task CheckAge()
         {
-            int ageCheck = DateTime.Compare(CurrentBirthDate, DateTime.Today);
-            if (ageCheck > 0 || ageCheck.Equals(-1))
+            long ticks = new DateTime(1901, 02, 19, 00, 00, 00, new CultureInfo("en-US", false).Calendar).Ticks;
+            DateTime dtStart = new DateTime(ticks);
+            
+            if (!(CurrentBirthDate > dtStart && CurrentBirthDate <= DateTime.Today))
             {
                 //throw new BirthDateException("Person must be already born.");
                 throw new BirthDateException();
