@@ -38,8 +38,7 @@
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Birth Date:" Margin="5,3"/>
             <DatePicker Grid.Row="3" Grid.Column="1" x:Name="BirthDatePicker" DisplayDateStart="2/19/1901"  SelectedDate="{Binding CurrentBirthDate, IsAsync=True}" FirstDayOfWeek="Monday"/>
 
-            <Button Grid.Row="4" Grid.ColumnSpan="2" x:Name="ProceedButton" Margin="5,3" Content="Proceed" Command="{Binding Path=CheckAndProceedCommand}" />
-            <!--Click="ProceedButton_OnClick"-->
+            <Button Grid.Row="4" Grid.ColumnSpan="2" x:Name="ProceedButton" Margin="5,3" Content="Proceed" Command="{Binding Path=CheckAndProceedCommand}"/>
         </Grid>
 
         <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" Background="Gray" HorizontalAlignment="Left" />

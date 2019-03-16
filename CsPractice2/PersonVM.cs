@@ -225,13 +225,6 @@ namespace NaUKMA.CS.Practice02
 
         #endregion
 
-        ////on_clicks
-
-        //private async void ProceedButton_OnClick(object sender, RoutedEventArgs e)
-        //{
-        //    await CheckAndProceed();
-        //}
-
         //commands
 
         private ICommand _checkAndProceedCommand;
