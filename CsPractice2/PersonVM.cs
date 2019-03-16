@@ -258,12 +258,12 @@ namespace NaUKMA.CS.Practice02
                 await CheckAge();
                 await CheckEmail();
             }
-            catch (BirthDateException ex)
+            catch (BirthDateException)
             {
-                MessageBox.Show("This program works only for people born on 02.19.1901 or later, up to today.");
+                MessageBox.Show("This program works only for people born on 19.02.1901 (UKR locale) or later, up to today.");
                 return;
             }
-            catch (EmailException ex)
+            catch (EmailException)
             {
                 MessageBox.Show("Please, enter existing email address.");
                 return;
@@ -297,7 +297,7 @@ namespace NaUKMA.CS.Practice02
             long ticks = new DateTime(1901, 02, 19, 00, 00, 00, new CultureInfo("en-US", false).Calendar).Ticks;
             DateTime dtStart = new DateTime(ticks);
             
-            if (!(CurrentBirthDate > dtStart && CurrentBirthDate <= DateTime.Today))
+            if (!(CurrentBirthDate >= dtStart && CurrentBirthDate <= DateTime.Today))
             {
                 //throw new BirthDateException("Person must be already born.");
                 throw new BirthDateException();
