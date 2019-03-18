@@ -87,7 +87,7 @@ namespace NaUKMA.CS.Practice02
         public string ResultName
         {
             get { return _resultName; }
-            set
+            private set
             {
                 _resultName = value;
                 OnPropertyChanged();
@@ -103,7 +103,7 @@ namespace NaUKMA.CS.Practice02
         public string ResultSurname
         {
             get { return _resultSurname; }
-            set
+            private set
             {
                 _resultSurname = value;
                 OnPropertyChanged();
@@ -119,7 +119,7 @@ namespace NaUKMA.CS.Practice02
         public string ResultEmail
         {
             get { return _resultEmail; }
-            set
+            private set
             {
                 _resultEmail = value;
                 OnPropertyChanged();
@@ -135,7 +135,7 @@ namespace NaUKMA.CS.Practice02
         public string ResultBirthDate
         {
             get { return _resultBirthDate; }
-            set
+            private set
             {
                 _resultBirthDate = value;
                 OnPropertyChanged();
@@ -151,7 +151,7 @@ namespace NaUKMA.CS.Practice02
         public string ResultIsAdult
         {
             get { return _resultIsAdult; }
-            set
+            private set
             {
                 _resultIsAdult = value;
                 OnPropertyChanged();
@@ -167,7 +167,7 @@ namespace NaUKMA.CS.Practice02
         public string ResultSunSign
         {
             get { return _resultSunSign; }
-            set
+            private set
             {
                 _resultSunSign = value;
                 OnPropertyChanged();
@@ -183,7 +183,7 @@ namespace NaUKMA.CS.Practice02
         public string ResultChineseSign
         {
             get { return _resultChineseSign; }
-            set
+            private set
             {
                 _resultChineseSign = value;
                 OnPropertyChanged();
@@ -199,7 +199,7 @@ namespace NaUKMA.CS.Practice02
         public string ResultIsBirthday
         {
             get { return _resultIsBirthday; }
-            set
+            private set
             {
                 _resultIsBirthday = value;
                 OnPropertyChanged();
@@ -215,7 +215,7 @@ namespace NaUKMA.CS.Practice02
         public string ResultBdNote
         {
             get { return _resultBdNote; }
-            set
+            private set
             {
                 _resultBdNote = value;
                 OnPropertyChanged();
