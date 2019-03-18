@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -237,7 +238,7 @@ namespace NaUKMA.CS.Practice02
                 return _checkAndProceedCommand ?? (_checkAndProceedCommand = new RelayCommand<object>(
                            async o =>
                            {
-                               await CheckAndProceed();
+                               await Task.Run(() => CheckAndProceed());
 
                            }, o => CanExecuteCommand()));
             }
@@ -255,8 +256,8 @@ namespace NaUKMA.CS.Practice02
             //check
             try
             {
-                await CheckAge();
-                await CheckEmail();
+                CheckAge();
+                CheckEmail();
             }
             catch (BirthDateException)
             {
@@ -292,7 +293,7 @@ namespace NaUKMA.CS.Practice02
             ResultIsBirthday = tmp.IsBirthday.ToString();
         }
 
-        private async Task CheckAge()
+        private void CheckAge()
         {
             long ticks = new DateTime(1901, 02, 19, 00, 00, 00, new CultureInfo("en-US", false).Calendar).Ticks;
             DateTime dtStart = new DateTime(ticks);
@@ -304,7 +305,7 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
-        private async Task CheckEmail()
+        private void CheckEmail()
         {    
             try
             {
