@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 
 namespace NaUKMA.CS.Practice02
 {
@@ -11,6 +12,13 @@ namespace NaUKMA.CS.Practice02
         {
             InitializeComponent();
             DataContext = new PersonVm();
+        }
+
+        private void OnClosing(object sender, CancelEventArgs e)
+        {
+            var viewModel = (PersonVm)DataContext;
+            if (viewModel.ClosingCommand.CanExecute(null))
+                viewModel.ClosingCommand.Execute(null);
         }
     }
 }

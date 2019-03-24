@@ -1,13 +1,110 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Xml.Serialization;
 
 namespace NaUKMA.CS.Practice02
 {
-    internal class Person
+    [Serializable]
+    public class Person : INotifyPropertyChanged
     {
-        internal String Name { get; private set; }
-        internal String Surname { get; private set; }
-        internal String Email { get; private set; }
-        internal DateTime? BirthDate { get; private set; }
+        private String _name;
+        private String _surname;
+        private String _email;
+        private DateTime? _birthDate;
+
+        private Boolean? _isAdult;
+        private String _sunSign;
+        private String _chineseSign;
+        private Boolean? _isBirthday;
+
+        public String Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged("Name");
+            }
+        }
+
+        public String Surname
+        {
+            get { return _surname; }
+            set
+            {
+                _surname = value;
+                OnPropertyChanged("Surname");
+            }
+        }
+        public String Email
+        {
+            get { return _email; }
+            set
+            {
+                _email = value;
+                OnPropertyChanged("Email");
+            }
+        }
+        public DateTime? BirthDate
+        {
+            get { return _birthDate; }
+            set
+            {
+                _birthDate = value;
+                ReCalcAdditionalInfo();
+                OnPropertyChanged("BirthDate");
+            }
+        }
+
+        [XmlIgnore]
+        public Boolean? IsAdult
+        {
+            get { return _isAdult; }
+            private set
+            {
+                _isAdult = value;
+                OnPropertyChanged("IsAdult");
+            }
+        }
+
+        [XmlIgnore]
+        public String SunSign
+        {
+            get { return _sunSign; }
+            private set
+            {
+                _sunSign = value;
+                OnPropertyChanged("SunSign");
+            }
+        }
+
+        [XmlIgnore]
+        public String ChineseSign
+        {
+            get { return _chineseSign; }
+            private set
+            {
+                _chineseSign = value;
+                OnPropertyChanged("ChineseSign");
+            }
+        }
+
+        [XmlIgnore]
+        public Boolean? IsBirthday
+        {
+            get { return _isBirthday; }
+            private set
+            {
+                _isBirthday = value;
+                OnPropertyChanged("IsBirthday");
+            }
+        }
+
+        private Person()
+        {
+
+        }
 
         internal Person(string name, string surname, string email, Object birthDate)
         {
@@ -17,10 +114,17 @@ namespace NaUKMA.CS.Practice02
             if (birthDate is DateTime)
             {
                 BirthDate = (DateTime?)birthDate;
+
+                ReCalcAdditionalInfo();
             }
             else
             {
                 BirthDate = null;
+
+                IsAdult = null;
+                SunSign = null;
+                ChineseSign = null;
+                IsBirthday = null;
             }
         }
 
@@ -32,22 +136,17 @@ namespace NaUKMA.CS.Practice02
         {
         }
 
-        internal bool IsAdult
+        private bool IsAdultCalc()
         {
-            get
-            {
                 int age = DateTime.Now.Year - BirthDate.Value.Year;
                 if (BirthDate > DateTime.Now.AddYears(-age))
                     age--;
 
                 return (age > 18);
-            }
         }
 
-        internal string SunSign
+        internal string SunSignCalc()
         {
-            get
-            {
                 int month = BirthDate.Value.Month;
                 int day = BirthDate.Value.Day;
                 switch (month)
@@ -114,14 +213,11 @@ namespace NaUKMA.CS.Practice02
                             return "Capricorn";
                     default:
                         return "";
-                }
             }
         }
 
-        internal string ChineseSign
+        internal string ChineseSignCalc()
         {
-            get
-            {
                 var c = new System.Globalization.ChineseLunisolarCalendar();
                 var y = c.GetSexagenaryYear(BirthDate.Value);
                 var s = c.GetCelestialStem(y) - 1;
@@ -131,15 +227,26 @@ namespace NaUKMA.CS.Practice02
                     + " - "
                     + "Wood,Fire,Earth,Metal,Water".Split(',')[s / 2]
                     + " - Y" + (s % 2 > 0 ? "in" : "ang");
-            }
         }
 
-        internal bool IsBirthday
+        internal bool IsBirthdayCalc()
         {
-            get
-            {
                 return DateTime.Now.Month.Equals(BirthDate.Value.Month) && DateTime.Now.Day.Equals(BirthDate.Value.Day);
-            }
+        }
+
+        private void ReCalcAdditionalInfo()
+        {
+            IsAdult = IsAdultCalc();
+            SunSign = SunSignCalc();
+            ChineseSign = ChineseSignCalc();
+            IsBirthday = IsBirthdayCalc();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

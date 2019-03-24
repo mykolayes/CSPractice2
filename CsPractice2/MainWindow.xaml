@@ -5,86 +5,125 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NaUKMA.CS.Practice02"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="auto" Width="auto"
+        Closing="OnClosing">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="5"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" Margin="5,3"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentName, IsAsync=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Margin="5,3"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" Margin="5,3"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentName, IsAsync=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Margin="5,3"/>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Surname:" Margin="5,3"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentSurname, IsAsync=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Margin="5,3"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Surname:" Margin="5,3"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentSurname, IsAsync=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Margin="5,3"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Email:" Margin="5,3"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEmail, IsAsync=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Margin="5,3"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Email:" Margin="5,3"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEmail, IsAsync=True, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Margin="5,3"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Birth Date:" Margin="5,3"/>
-            <DatePicker Grid.Row="3" Grid.Column="1" x:Name="BirthDatePicker" DisplayDateStart="2/19/1901"  SelectedDate="{Binding CurrentBirthDate, IsAsync=True}" FirstDayOfWeek="Monday"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Birth Date:" Margin="5,3"/>
+                <DatePicker Grid.Row="3" Grid.Column="1" x:Name="BirthDatePicker" DisplayDateStart="2/19/1901"  SelectedDate="{Binding CurrentBirthDate, IsAsync=True}" FirstDayOfWeek="Monday"/>
 
-            <Button Grid.Row="4" Grid.ColumnSpan="2" x:Name="ProceedButton" Margin="5,3" Content="Proceed" Command="{Binding Path=CheckAndProceedCommand}"/>
+                <Button Grid.Row="4" Grid.ColumnSpan="2" x:Name="ProceedButton" Margin="5,3" Content="Add New User" Command="{Binding Path=CheckAndProceedCommand}"/>
+                <Button Grid.Row="5" Grid.ColumnSpan="2" x:Name="DeleteUserButton" Margin="5,3" Content="Delete Selected User" Command="{Binding Path=DeleteUserCommand}"/>
+            </Grid>
+
+            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" Background="Gray" HorizontalAlignment="Left" />
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Entered Name:" Margin="5,3"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ResultName, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Entered Surname:" Margin="5,3"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ResultSurname, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Entered Email:" Margin="5,3"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ResultEmail, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Entered Birth Date:" Margin="5,3"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ResultBirthDate, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Is Adult:" Margin="5,3"/>
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ResultIsAdult, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Sun Sign:" Margin="5,3"/>
+                <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ResultSunSign, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Chinese Sign:" Margin="5,3"/>
+                <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ResultChineseSign, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
+
+                <TextBlock Grid.Row="7" Grid.Column="0" Text="Has Birthday Today:" Margin="5,3"/>
+                <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ResultIsBirthday, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
+
+                <TextBlock Grid.Row="8" Grid.Column="0" Text="{Binding ResultBdNote}" Margin="5,3"/>
+            </Grid>
         </Grid>
-
-        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" Background="Gray" HorizontalAlignment="Left" />
-
-        <Grid Grid.Column="2">
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="300" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Entered Name:" Margin="5,3"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ResultName, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
-
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Entered Surname:" Margin="5,3"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ResultSurname, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
-
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Entered Email:" Margin="5,3"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ResultEmail, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
-
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Entered Birth Date:" Margin="5,3"/>
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ResultBirthDate, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
-
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Is Adult:" Margin="5,3"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ResultIsAdult, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
-
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="Sun Sign:" Margin="5,3"/>
-            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ResultSunSign, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
-
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="Chinese Sign:" Margin="5,3"/>
-            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ResultChineseSign, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
-
-            <TextBlock Grid.Row="7" Grid.Column="0" Text="Has Birthday Today:" Margin="5,3"/>
-            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ResultIsBirthday, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" Margin="5,3"/>
-
-            <TextBlock Grid.Row="8" Grid.Column="0" Text="{Binding ResultBdNote}" Margin="5,3"/>
+            <DataGrid Grid.Row="0" Grid.Column="0" ItemsSource="{Binding PeopleCollectionVM}" SelectedItem="{Binding SelectedPerson}" SelectionMode="Single" AutoGenerateColumns="False"
+                      ScrollViewer.CanContentScroll="True" 
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <!--<DataGrid.RowValidationRules>
+                    <local:CourseValidationRule ValidationStep="UpdatedValue"/>
+                </DataGrid.RowValidationRules>-->
+                <!--SelectedItem="{Binding SelectedPerson}"-->
+                <!--, UpdateSourceTrigger=PropertyChanged-->
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Surname" Binding="{Binding Surname}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Birth Date" Binding="{Binding BirthDate}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Is Adult (non-editable)" Binding="{Binding IsAdult, Mode=OneWay}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Sun Sign (non-editable)" Binding="{Binding SunSign, Mode=OneWay}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Chinese Sign (non-editable)" Binding="{Binding ChineseSign, Mode=OneWay}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Has BD Birthday Today (non-editable)" Binding="{Binding IsBirthday, Mode=OneWay}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
     </Grid>
 </Window>

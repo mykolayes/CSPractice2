@@ -1,17 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Xml.Serialization;
 
 namespace NaUKMA.CS.Practice02
 {
     class PersonVm : INotifyPropertyChanged
     {
-        public PersonVm()
+        internal PersonVm()
         {
             CurrentBirthDate = DateTime.Today;
         }
@@ -227,6 +233,29 @@ namespace NaUKMA.CS.Practice02
 
         #endregion
 
+        //collection
+        #region PeopleCollectionVM
+
+        public ObservableCollection<Person> PeopleCollectionVM
+        {
+            get
+            {
+                if (_peopleCollectionVM is null)
+                {
+                    LoadPeopleList();
+                }
+                return _peopleCollectionVM;
+            }
+            private set
+            {
+                _peopleCollectionVM = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<Person> _peopleCollectionVM;
+
+        #endregion
+
         //commands
 
         private ICommand _checkAndProceedCommand;
@@ -240,13 +269,28 @@ namespace NaUKMA.CS.Practice02
                            {
                                await Task.Run(() => CheckAndProceed());
 
-                           }, o => CanExecuteCommand()));
+                           }, o => CanAddCommand()));
+            }
+        }
+
+        private ICommand _closingCommand;
+
+        public ICommand ClosingCommand
+        {
+            get
+            {
+                return _closingCommand ?? (_closingCommand = new RelayCommand<object>(
+                            o =>
+                           {
+                               SavePeopleList();
+
+                           }));
             }
         }
 
         //logic
 
-        private bool CanExecuteCommand()
+        private bool CanAddCommand()
         {
             return !string.IsNullOrEmpty(CurrentName) && !string.IsNullOrEmpty(CurrentSurname) && !string.IsNullOrEmpty(CurrentEmail) && !string.IsNullOrEmpty(CurrentBirthDate.ToString());
         }
@@ -280,7 +324,7 @@ namespace NaUKMA.CS.Practice02
             {
                 ResultBdNote = "";
             }
-            
+
             Person tmp = new Person(CurrentName, CurrentSurname, CurrentEmail, CurrentBirthDate);
 
             ResultName = tmp.Name;
@@ -291,13 +335,20 @@ namespace NaUKMA.CS.Practice02
             ResultSunSign = tmp.SunSign;
             ResultChineseSign = tmp.ChineseSign;
             ResultIsBirthday = tmp.IsBirthday.ToString();
+
+            //call ui thread to modify the collection
+            await App.Current.Dispatcher.BeginInvoke((Action)delegate
+            {
+                PeopleCollectionVM.Add(tmp);
+            });
+
         }
 
         private void CheckAge()
         {
             long ticks = new DateTime(1901, 02, 19, 00, 00, 00, new CultureInfo("en-US", false).Calendar).Ticks;
             DateTime dtStart = new DateTime(ticks);
-            
+
             if (!(CurrentBirthDate >= dtStart && CurrentBirthDate <= DateTime.Today))
             {
                 //throw new BirthDateException("Person must be already born.");
@@ -306,7 +357,7 @@ namespace NaUKMA.CS.Practice02
         }
 
         private void CheckEmail()
-        {    
+        {
             try
             {
                 System.Net.Mail.MailAddress mailAddress = new System.Net.Mail.MailAddress(CurrentEmail);
@@ -318,12 +369,132 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
+        private void SavePeopleList()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Person>));
+            try
+            {
+                using (FileStream stream = new FileStream("People.xml", FileMode.Create))
+                {
+                    serializer.Serialize(stream, PeopleCollectionVM);
+                }
+
+                MessageBoxResult ok = MessageBox.Show("Users' data saved.");
+            }
+            catch
+            {
+                MessageBoxResult ok = MessageBox.Show("Could not save users' data.");
+            }
+        }
+
+        private void LoadPeopleList()
+        {
+            _peopleCollectionVM = new ObservableCollection<Person>();
+
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Person>));
+
+            try
+            {
+                using (FileStream stream = new FileStream("People.xml", FileMode.Open))
+                {
+                    IEnumerable<Person> personData = (IEnumerable<Person>) serializer.Deserialize(stream);
+
+                    foreach (Person p in personData)
+                    {
+                        PeopleCollectionVM.Add(p);
+                    }
+                }
+
+            }
+            catch (FileNotFoundException)
+            {
+                //file not found -> first launch of the application detected (or possible reset via removal of the 'People.xml')                
+
+                for (int i = 0; i < 50; i++)
+                {
+                    _peopleCollectionVM.Add(new Person("a" + i, "b" + i, "a" + i + "@b.c",
+                        new DateTime(1960 + i, 03, 01)));
+                }
+            }
+            catch (Exception ex)
+            {
+                //suppress other ex-s.
+
+                //MessageBox.Show(ex.ToString());
+            }
+        }
+
         //event handling
         public event PropertyChangedEventHandler PropertyChanged;
 
         void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        //datagrid validation
+        //public class CourseValidationRule : ValidationRule
+        //{
+        //    public override ValidationResult Validate(object value,
+        //        System.Globalization.CultureInfo cultureInfo)
+        //    {
+        //        Course course = (value as BindingGroup).Items[0] as Course;
+        //        if (course.StartDate > course.EndDate)
+        //        {
+        //            return new ValidationResult(false,
+        //                "Start Date must be earlier than End Date.");
+        //        }
+        //        else
+        //        {
+        //            return ValidationResult.ValidResult;
+        //        }
+        //    }
+        //}
+
+        //datagrid / PeopleCollectionVM logic
+        #region SelectedPerson
+
+        public Person SelectedPerson
+        {
+            get { return _selectedPerson; }
+            set
+            {
+                _selectedPerson = value;
+                OnPropertyChanged(nameof(SelectedPerson));
+            }
+        }
+
+        private Person _selectedPerson;
+
+        #endregion
+        //DeleteUserCommand
+        private ICommand _deleteUserCommand;
+
+        public ICommand DeleteUserCommand
+        {
+            get
+            {
+                return _deleteUserCommand ?? (_deleteUserCommand = new RelayCommand<object>(
+                           async o =>
+                           {
+                               await Task.Run(() => DeleteUser());
+
+                           }, o => CanDeleteCommand()));
+            }
+        }
+
+        private bool CanDeleteCommand()
+        {
+            return !(SelectedPerson is null);
+        }
+
+        private async Task DeleteUser()
+        {
+            //call ui thread to modify the collection
+            await App.Current.Dispatcher.BeginInvoke((Action)delegate
+            {
+                PeopleCollectionVM.Remove(SelectedPerson);
+            });
         }
     }
 }
