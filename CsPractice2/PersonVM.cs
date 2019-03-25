@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -256,6 +257,24 @@ namespace NaUKMA.CS.Practice02
 
         #endregion
 
+        #region PeopleCollectionVMFilteredOut
+
+        public ObservableCollection<Person> PeopleCollectionVMFilteredOut
+        {
+            get
+            {
+                return _peopleCollectionVMFilteredOut;
+            }
+            private set
+            {
+                _peopleCollectionVMFilteredOut = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<Person> _peopleCollectionVMFilteredOut;
+
+        #endregion
+
         //commands
 
         private ICommand _checkAndProceedCommand;
@@ -292,7 +311,7 @@ namespace NaUKMA.CS.Practice02
 
         private bool CanAddCommand()
         {
-            return !string.IsNullOrEmpty(CurrentName) && !string.IsNullOrEmpty(CurrentSurname) && !string.IsNullOrEmpty(CurrentEmail) && !string.IsNullOrEmpty(CurrentBirthDate.ToString());
+            return !string.IsNullOrEmpty(CurrentName) && !string.IsNullOrEmpty(CurrentSurname) && !string.IsNullOrEmpty(CurrentEmail) && !string.IsNullOrEmpty(CurrentBirthDate.ToString()) && PeopleCollectionVMFilteredOut is null;
         }
 
         private async Task CheckAndProceed()
@@ -310,7 +329,7 @@ namespace NaUKMA.CS.Practice02
             }
             catch (EmailException)
             {
-                MessageBox.Show("Please, enter existing email address.");
+                MessageBox.Show("Please, enter existing email address, which was not already added.");
                 return;
             }
 
@@ -361,6 +380,10 @@ namespace NaUKMA.CS.Practice02
             try
             {
                 System.Net.Mail.MailAddress mailAddress = new System.Net.Mail.MailAddress(CurrentEmail);
+                if (PeopleCollectionVM.Any(p => p.Email.Equals(CurrentEmail)))
+                {
+                    throw new EmailException();
+                }
             }
             catch
             {
@@ -371,6 +394,8 @@ namespace NaUKMA.CS.Practice02
 
         private void SavePeopleList()
         {
+            MergePeople();
+
             XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Person>));
             try
             {
@@ -424,6 +449,15 @@ namespace NaUKMA.CS.Practice02
             }
         }
 
+        private void MergePeople()
+        {
+            if (!(PeopleCollectionVMFilteredOut is null))
+            {
+                PeopleCollectionVM = new ObservableCollection<Person>(PeopleCollectionVM.Concat(PeopleCollectionVMFilteredOut).OrderBy(x => x.Name));
+                PeopleCollectionVMFilteredOut = null;
+            }
+        }
+
         //event handling
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -467,7 +501,7 @@ namespace NaUKMA.CS.Practice02
         private Person _selectedPerson;
 
         #endregion
-        //DeleteUserCommand
+
         private ICommand _deleteUserCommand;
 
         public ICommand DeleteUserCommand
@@ -495,6 +529,129 @@ namespace NaUKMA.CS.Practice02
             {
                 PeopleCollectionVM.Remove(SelectedPerson);
             });
+        }
+        //filtering
+        #region CurrentFilterText
+
+        public String CurrentFilterText
+        {
+            get { return _currentFilterText; }
+            set
+            {
+                _currentFilterText = value;
+                OnPropertyChanged(nameof(CurrentFilterText));
+            }
+        }
+
+        private String _currentFilterText;
+
+        #endregion
+
+        #region CurrentFilterType
+
+        public String CurrentFilterType
+        {
+            get { return _currentFilterType; }
+            set
+            {
+                _currentFilterType = value;
+                OnPropertyChanged(nameof(CurrentFilterType));
+            }
+        }
+
+        private String _currentFilterType;
+
+        #endregion
+
+        private ICommand _filterUserCommand;
+
+        public ICommand FilterUserCommand
+        {
+            get
+            {
+                return _filterUserCommand ?? (_filterUserCommand = new RelayCommand<object>(
+                           async o =>
+                           {
+                               await Task.Run(() => FilterUsers());
+
+                           }, o => CanFilterCommand()));
+            }
+        }
+
+        private bool CanFilterCommand()
+        {
+            return !string.IsNullOrEmpty(CurrentFilterText) && !string.IsNullOrEmpty(CurrentFilterType);
+        }
+
+        private async Task FilterUsers()
+        {
+            MergePeople();
+
+            switch (CurrentFilterType)
+            {
+                case "Name":
+                    PeopleCollectionVMFilteredOut = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => !x.Name.Contains(CurrentFilterText)));
+                    PeopleCollectionVM = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => x.Name.Contains(CurrentFilterText)));
+                    return;
+                case "Surname":
+                    PeopleCollectionVMFilteredOut = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => !x.Surname.Contains(CurrentFilterText)));
+                    PeopleCollectionVM = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => x.Surname.Contains(CurrentFilterText)));
+                    return;
+                case "Email":
+                    PeopleCollectionVMFilteredOut = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => !x.Email.Contains(CurrentFilterText)));
+                    PeopleCollectionVM = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => x.Email.Contains(CurrentFilterText)));
+                    return;
+                case "Birth Date":
+                    PeopleCollectionVMFilteredOut = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => !x.BirthDate.ToString().Contains(CurrentFilterText)));
+                    PeopleCollectionVM = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => x.BirthDate.ToString().Contains(CurrentFilterText)));
+                    return;
+                case "Is Adult":
+                    PeopleCollectionVMFilteredOut = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => !x.IsAdult.ToString().Contains(CurrentFilterText)));
+                    PeopleCollectionVM = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => x.IsAdult.ToString().Contains(CurrentFilterText)));
+                    return;
+                case "Sun Sign":
+                    PeopleCollectionVMFilteredOut = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => !x.SunSign.Contains(CurrentFilterText)));
+                    PeopleCollectionVM = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => x.SunSign.Contains(CurrentFilterText)));
+                    return;
+                case "Chinese Sign":
+                    PeopleCollectionVMFilteredOut = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => !x.ChineseSign.Contains(CurrentFilterText)));
+                    PeopleCollectionVM = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => x.ChineseSign.Contains(CurrentFilterText)));
+                    return;
+                case "Has Birthday Today":
+                    PeopleCollectionVMFilteredOut = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => !x.IsBirthday.ToString().Contains(CurrentFilterText)));
+                    PeopleCollectionVM = new ObservableCollection<Person>(PeopleCollectionVM.Where(x => x.IsBirthday.ToString().Contains(CurrentFilterText)));
+                    return;
+                default:
+                    return;
+            }
+        }
+        //ResetFilterCommand
+        //merge 2 collections back and nullify the CurrentFilterText/CurrentFilterType, as well as the 2nd collection, leaving only PeopleCollVM
+        private ICommand _resetFilterCommand;
+
+        public ICommand ResetFilterCommand
+        {
+            get
+            {
+                return _resetFilterCommand ?? (_resetFilterCommand = new RelayCommand<object>(
+                           async o =>
+                           {
+                               await Task.Run(() => ResetFilter());
+
+                           }, o => CanResetFilterCommand()));
+            }
+        }
+
+        private bool CanResetFilterCommand()
+        {
+            return !string.IsNullOrEmpty(CurrentFilterText) || !string.IsNullOrEmpty(CurrentFilterType);
+        }
+
+        private async Task ResetFilter()
+        {
+            MergePeople();
+            CurrentFilterText = null;
+            CurrentFilterType = null;
         }
     }
 }

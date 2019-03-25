@@ -29,6 +29,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -49,6 +51,20 @@
 
                 <Button Grid.Row="4" Grid.ColumnSpan="2" x:Name="ProceedButton" Margin="5,3" Content="Add New User" Command="{Binding Path=CheckAndProceedCommand}"/>
                 <Button Grid.Row="5" Grid.ColumnSpan="2" x:Name="DeleteUserButton" Margin="5,3" Content="Delete Selected User" Command="{Binding Path=DeleteUserCommand}"/>
+
+                <TextBox Grid.Row="6" Grid.Column="0" Text="{Binding CurrentFilterText, IsAsync=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5,3"/>
+                <ComboBox Grid.Row="7" Grid.Column="0" Text="{Binding CurrentFilterType}" IsSynchronizedWithCurrentItem="True" VerticalAlignment="Top" Width="185" Height="Auto" Margin="5,3,0,0">
+                    <ComboBoxItem Content="Name"></ComboBoxItem>
+                    <ComboBoxItem Content="Surname"></ComboBoxItem>
+                    <ComboBoxItem Content="Email"></ComboBoxItem>
+                    <ComboBoxItem Content="Birth Date"></ComboBoxItem>
+                    <ComboBoxItem Content="Is Adult"></ComboBoxItem>
+                    <ComboBoxItem Content="Sun Sign"></ComboBoxItem>
+                    <ComboBoxItem Content="Chinese Sign"></ComboBoxItem>
+                    <ComboBoxItem Content="Has Birthday Today"></ComboBoxItem>
+                </ComboBox>
+                <Button Grid.Row="6" Grid.Column="1" x:Name="FilterUserButton" Margin="5,3" Content="Filter Users" Command="{Binding Path=FilterUserCommand}"/>
+                <Button Grid.Row="7" Grid.Column="1" x:Name="ResetFilterButton" Margin="5,3" Content="Reset Filters/Enable Adding" Command="{Binding Path=ResetFilterCommand}"/>
             </Grid>
 
             <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" Background="Gray" HorizontalAlignment="Left" />
@@ -104,7 +120,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <DataGrid Grid.Row="0" Grid.Column="0" ItemsSource="{Binding PeopleCollectionVM}" SelectedItem="{Binding SelectedPerson}" SelectionMode="Single" AutoGenerateColumns="False"
+            <DataGrid Grid.Row="0" Grid.Column="0" ItemsSource="{Binding PeopleCollectionVM, Mode=OneWay}" SelectedItem="{Binding SelectedPerson}" SelectionMode="Single" AutoGenerateColumns="False"
                       ScrollViewer.CanContentScroll="True" 
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto">
